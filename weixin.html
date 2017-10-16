@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>微信小程序</title>
+    <link rel="stylesheet" type="text/css" href="./weixin/iconfont.css">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/jquery-mobile/1.4.5/jquery.mobile.min.css" rel="stylesheet">
+
+    <script src="./weixin/iconfont.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-mobile/1.4.5/jquery.mobile.min.js"></script>
+    <style media="screen">
+       *{
+         margin: 0;
+         padding: 0;
+       }
+       ul{
+         list-style: none;
+       }
+       #tu{
+         float: right;
+       }
+       #tu a{
+         background-color: #1d1d1d;
+       }
+       .ui-header .ui-title, .ui-footer .ui-title{
+         margin: 0% 3%;
+         float: left;
+       }
+       .ui-grid-c div span{
+         font-size: 5px;
+       }
+       .ui-grid-c div{
+         text-align: center;
+       }
+       .lu{
+         color: #00ff19;
+       }
+       /*加号菜单*/
+       .caidan{
+         position: absolute;
+         right: 10px;
+         top: 46px;
+         background-color: #111;
+         display: none;
+       }
+       .caidan li{
+         color: #fff;
+         border-top: 1px solid #000;
+         width: 180px;
+         height: 40px;
+         line-height: 40px;
+         font-size: 14px;
+         font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+       }
+       .caidan li i{
+         margin: 0 20px;
+       }
+
+       /*内容*/
+       .nei{
+         width: 100%;
+         background-color: #e9e9e9;
+       }
+       .nei ul{
+         display: none;
+       }
+       .nei ul a{
+         text-align: left;
+         margin: 0;
+         border: none;
+         border-bottom: 1px solid #e9e6e6;
+       }
+
+       /*内容的微信*/
+       .nei .wex>li{
+         width: 100%;
+
+         border-bottom: 1px solid #999;
+       }
+       .nei .wex{
+         display: block;
+         background-color: inherit;
+       }
+       .wex .ui-btn{
+         padding: 5px 0 0 5px;
+         line-height: 25px;
+       }
+       .wex .ui-btn div,.wex .ui-btn img{
+         float: left;
+       }
+       .wex .ui-btn div{
+         margin: 5px 0 0 30px;
+       }
+       .wex .ui-btn div span{
+         font-size: 12px;
+         font-weight: 100;
+         color: #949494;
+       }
+       .wex .ui-btn p{
+         font-size: 12px;
+         font-weight: 100;
+         color: #949494;
+         float: right;
+         margin-right: 20px;
+       }
+       .nei .wex li:last-child{
+         margin-bottom: 50px;
+       }
+       .nei ul li i{
+         margin-right: 15px;
+       }
+
+       /*通讯录颜色*/
+       .txl li:nth-child(1) i{
+         color: #ff9100;
+       }
+       .txl li:nth-child(2) i{
+         color:#4aff00;
+       }
+       .txl li:nth-child(4) i{
+         color: #000aff;
+       }
+       .txl li:nth-child(5) i{
+         background-color: #000aff;
+         color: #fff;
+       }
+       .ui-listview>.ui-li-divider{
+         padding: 0em 1.143em;
+       }
+       .haoyou img{
+         width: 2em;
+         height: 2em;
+         margin: 0 8px;
+       }
+       .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb{
+         min-height: 1.3em;
+         padding-left: 3.25em;
+       }
+
+       /*内容li的宽高*/
+      .ui-btn{
+        line-height: normal;
+        padding: 0.5em 1em;
+      }
+      .ui-btn svg{
+        float: left;
+        margin-right: 15px;
+      }
+
+      /*发现*/
+      .fx li a{
+        line-height: 2em;
+      }
+      .fx li:nth-child(4) i{
+        color: #38c;
+      }
+      .fx li:nth-child(6) span{
+        font-size: 10px;
+        float: right;
+      }
+      .fx li:nth-child(6) span i{
+        margin-left: 5px;
+        font-size: 18px;
+        color: #00e8ff;
+      }
+      .fx li:nth-child(6) span i b{
+        position: absolute;
+        border: 3px solid #ff0000;
+        border-radius: 50%;
+      }
+      .fx li:nth-child(1),.fx li:nth-child(3),.fx li:nth-child(4),.fx li:nth-child(6){
+        margin-bottom: 15px;
+      }
+      .wo li:nth-child(1),.wo li:nth-child(2),.wo li:nth-child(6){
+        margin-bottom: 15px;
+      }
+
+    </style>
+    <style type="text/css">
+        .icon {
+           width: 2em; height: 2em;
+           vertical-align: -0.15em;
+           fill: currentColor;
+           overflow: hidden;
+        }
+    </style>
+  </head>
+  <body>
+
+    <!-- 头部 -->
+    <div data-role="header" data-tap-toggle = "false" data-position="fixed" data-theme="b" class="tou">
+      <h5 class="wx">微信</h5>
+      <div id="tu">
+      <a href="#" class="ui-btn ui-btn-b ui-corner-all ui-icon-search ui-btn-icon-notext">sou</a>
+      <a href="#" class="ui-btn ui-btn-b ui-corner-all ui-icon-plus ui-btn-icon-notext jia">jia</a>
+      </div>
+      <ul class="caidan">
+        <li>  <i class="icon iconfont icon-faqiqunliao"></i>  发起群聊</li>
+        <li><i class="icon iconfont icon-icon"></i>添加朋友</li>
+        <li><i class="icon iconfont icon-saoyisao"></i>扫一扫</li>
+        <li><i class="icon iconfont icon-shoufukuan"></i>收付款</li>
+        <li><i class="icon iconfont icon-xinfeng"></i>帮助与反馈</li>
+      </ul>
+    </div>
+
+    <!-- 内容 -->
+    <div data-role="" class="nei">
+      <!-- 微信 -->
+      <ul class="wex">
+        <!-- 用jquery添加内容 -->
+      </ul>
+
+      <!-- 通讯录 -->
+      <ul class="txl">
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <i class="icon iconfont icon-xindepengyou"></i>
+            新的朋友
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <i class="icon iconfont icon-qunliao"></i>
+          群聊
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <i class="icon iconfont icon-biaoqian"></i>
+            标签
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <i class="icon iconfont icon-gongzhonghao-copy"></i>
+            公众号
+          </a>
+        </li>
+        <!-- 好友 -->
+
+        <ul data-autodividers="true" data-role="listview" data-icon="false" class="haoyou">
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Adele</a></li>
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Agnes</a></li>
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Albert</a></li>
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Billy</a></li>
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Bob</a></li>
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Calvin</a></li>
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Cameron</a></li>
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Chloe</a></li>
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Christina</a></li>
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Diana</a></li>
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Gabriel</a></li>
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Glen</a></li>
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Ralph</a></li>
+          <li><a href="#"><img src="./image/head.jpg" alt="头像">Valarie</a></li>
+        </ul>
+      </ul>
+
+      <!-- 发现 -->
+      <ul class="fx">
+        <li>
+          <div style="height:15px;width:100%;visibility:hidden;"></div>
+          <a href="#" class="ui-btn" data-theme="a">
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-pengyouquan"></use>
+            </svg>
+          朋友圈
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-saoyisao"></use>
+            </svg>
+          扫一扫
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-yaoyiyao"></use>
+            </svg>
+          摇一摇
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <i class="icon iconfont icon-people"></i>
+          附件的人
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-gouwu"></use>
+            </svg>
+          购物
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-youxi"></use>
+            </svg>
+          游戏
+          <span>测测多少好友在玩<i class="fa fa-tachometer"><b></b></i></span>
+
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-xiaochengxu"></use>
+            </svg>
+          小程序
+          </a>
+        </li>
+      </ul>
+
+      <!-- 我 -->
+      <ul class="wo">
+        <!-- 头像 -->
+        <li>
+          <div style="height:15px;width:100%;visibility:hidden;"></div>
+          <a href="#" class="ui-btn" data-theme="a">
+            <img src="./image/head.jpg" alt="头像" width="70" height="70" style="float:left">
+            <div style="float:left;margin-left:20px;line-height:23px;margin-top:12px;">
+            <strong>钟颖</strong><br/>
+            <span style="font-weight:100;font-size:10px;">微信号：12345689</span>
+          </div>
+          <i class="icon iconfont icon-erweima" style="float:right;line-height:70px;width:1em;height:3em;font-size:20px;"></i>
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-qianbao"></use>
+            </svg>
+          钱包
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-shoucang"></use>
+            </svg>
+            收藏
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-xiangce-copy"></use>
+            </svg>
+            相册
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-iconqiabao"></use>
+            </svg>
+            卡包
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-biaoqing"></use>
+            </svg>
+            表情
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="ui-btn" data-theme="a">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-_fuzhi"></use>
+            </svg>
+            设置
+          </a>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- 尾部 -->
+    <div data-role="footer" data-tap-toggle = "false" data-position="fixed" class="wei">
+      <div class="ui-grid-c">
+        <div class="ui-block-a"><p><i class="icon iconfont icon-weixintubiao-"></i></p><span>微信</span></div>
+        <div class="ui-block-b"><p><i class="fa fa-user-circle fa-2x"></i></p><span>通讯录</span></div>
+        <div class="ui-block-c"><p><i class="icon iconfont icon-discovery-on"></i></p><span>发现</span></div>
+        <div class="ui-block-d"><p><i class="icon iconfont icon-me-copy"></i></p><span>我</span></div>
+      </div>
+    </div>
+
+
+    <script type="text/javascript">
+      //循环添加li标签　微信内容消息
+     for (let i = 0; i < 20; i++) {
+       $('.wex').append('<li><a href="#" class="ui-btn" data-theme="a">'+
+        　'<img src="./image/head.jpg" alt="头像" width="60" height="60" >'+
+        　'<div> <h3>好友</h3> <span>这是聊天信息</span> </div>'+
+        　'<p>13:14</p>  </a> </li>')
+     }
+    //获取他的高度将body的宽度加背景颜色
+      var height = $(this).height()-$('.tou').height()-$('.wei').height()-33+'px';
+      $('.nei').css('height', height);
+      //当屏幕大小有改动时
+    $(window).resize(function() {
+      var height = $(this).height()-$('.tou').height()-$('.wei').height()-4+'px';
+      console.log(height);
+      $('.nei').css('height', height);
+    });
+    //单击头部的加号显示列表或者隐藏
+        $('.jia').click(function(event) {
+          if ($('.caidan').is(':hidden')) {
+            $('.caidan').show();
+          }
+        });
+
+        $('.caidan').click(function(event) {
+          $(this).hide();
+        });
+        //单击内容的区域会隐藏头部的列表
+        $('.nei').click(function(event) {
+          if ($('.caidan').is(':visible')) {
+            $('.caidan').hide();
+          }
+          if ($('.nei').is(':visible')) {
+            $('.caidan').hide();
+          }
+        });
+
+        //将单击尾部图标时给他添加样式
+        $('.ui-grid-c div').click(function(event) {
+          //单击尾部切换不同的场景
+          if($(this).index() === 0){
+            console.log($(this).index());
+            //更换图标
+            $('.ui-block-a i').removeClass('icon-weixintubiao-').addClass('icon-faqiqunliao');
+            $('.nei ul').eq(0).show().siblings().hide();
+          }else if ($(this).index() === 1) {
+            $('.nei>ul').eq(1).show().siblings().hide();
+            $('.nei>ul>ul').show();
+          }else if ($(this).index() === 2) {
+            $('.nei>ul').eq(2).show().siblings().hide();
+          }else if ($(this).index() === 3) {
+            $('.nei>ul').eq(3).show().siblings().hide();
+          }
+          //如果不是点第一个就换回原来的图标
+          if($(this).index()){
+            $('.ui-block-a i').removeClass('icon-faqiqunliao').addClass('icon-weixintubiao-');
+          }
+          //将单击的这个颜色变为绿色去掉兄弟的颜色
+          $(this).addClass('lu').siblings().removeClass('lu');
+        });
+
+
+    </script>
+  </body>
+</html>
